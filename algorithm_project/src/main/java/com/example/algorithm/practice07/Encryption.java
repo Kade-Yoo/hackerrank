@@ -2,6 +2,13 @@ package com.example.algorithm.practice07;
 
 import com.example.algorithm.practice07.model.Matrix;
 
+/**
+ * 1번 trim
+ * 2번 length
+ * 3번 올림, 내림
+ * 4번 문자열 배열로 변환
+ * 5번 암호화된 문자열 출력
+ */
 public class Encryption {
 	private Matrix matrix;
 	
@@ -10,64 +17,83 @@ public class Encryption {
 	}
 
 	/**
-	 * 1번 trim
-	 * 2번 length
-	 * 3번 올림, 내림
-	 * 4번 문자열 나누기
-	 * 5번 문자열 출력
+	 * Root 계산 함수
+	 * @param 암호화할 문자열 inputText
 	 */
 	public void calculateRoot(String inputText) {
-		int strSize = inputText.trim().length();
+		int textSize = inputText.trim().length();
 		
-		for(int index = strSize; index > 0; index--) {
-			if((index * index) < strSize 
-				&& strSize < ((index + 1) * (index + 1))) {
+		for(int index = 1; index < textSize; index++) {
+			int lower = index * index;
+			int greater = (index + 1) * (index + 1);
+			
+			if(lower < textSize && textSize < greater) {
 				matrix.setRowSize(index);
 				matrix.setColumnSize(index + 1);
 				break;
-			} else if(index * index == strSize){
+			} else if(lower == textSize){
 				matrix.setRowSize(index);
 				matrix.setColumnSize(index);
 				break;
 			}
 		}
 		
+		// rowSize * column >= textSize
 		int rowSize = matrix.getRowSize();
-		if(rowSize * matrix.getColumnSize() < strSize) {
+		if(rowSize * matrix.getColumnSize() < textSize) {
 			matrix.setRowSize(rowSize + 1);
 		}
 	}
 	
-	public String[] divideStr(String inputText) {
-		String[] answer=new String[matrix.getRowSize()];
-		int columnSize = matrix.getColumnSize();
+	/**
+	 * 입력받은 문자를 행렬로 만드는 함수
+	 * row * column
+	 * 
+	 * @param 암호화할 문자열 inputText
+	 * @return 행렬
+	 */
+	public String[] makeMatrix(String inputText) {
+		String[] matrixArr = new String[this.matrix.getRowSize()];
+		int columnSize = this.matrix.getColumnSize();
 		
-		for(int rowIndex = 0; rowIndex < answer.length; rowIndex++) {
-			String tempStr = "";		
-			for(int columnIndex = columnSize * rowIndex;columnIndex <  columnSize * (rowIndex+1); columnIndex++) {
+		for(int rowIndex = 0; rowIndex < matrixArr.length; rowIndex++) {
+			String tempText = "";		
+			// Text를 column 크기로 나눔
+			for(int columnIndex = columnSize * rowIndex;
+					columnIndex <  columnSize * (rowIndex + 1); 
+					columnIndex++) {
+				// 입력 문자열 길이보다 크거나 같을 경우
 				if(columnIndex >= inputText.length()) {
                     break;
                 }
-				tempStr += inputText.charAt(columnIndex);
+				tempText += inputText.charAt(columnIndex);
 			}
-			answer[rowIndex] = tempStr;
+			matrixArr[rowIndex] = tempText;
 		}
-		return answer;
+		return matrixArr;
 	}
 	
-	public String getResult(String[] strEncrypted) {
-		String resultText = "";
+	/**
+	 * 암호화 함수
+	 * 
+	 * @param 행렬 matrixArr
+	 * @return 암호화된 문자열
+	 */
+	public String encryptText(String[] matrixArr) {
+		String encryptedText = "";
 		int columnSize = matrix.getColumnSize();
 		
 		for(int columnIndex = 0; columnIndex < columnSize; columnIndex++) {
-			for(int rowIndex = 0; rowIndex < strEncrypted.length; rowIndex++) {
-				if(columnIndex < strEncrypted[rowIndex].length() ) {
-					resultText += strEncrypted[rowIndex].charAt(columnIndex);
+			for(int rowIndex = 0; rowIndex < matrixArr.length; rowIndex++) {
+				// Text 길이까지만 사용
+				if(columnIndex < matrixArr[rowIndex].length() ) {
+					encryptedText += matrixArr[rowIndex].charAt(columnIndex);
 				}
 			}
 			
-			resultText += ((columnIndex == columnSize -1) ? "" : " "); 
+			// 빈칸 삽입
+			encryptedText += ((columnIndex == columnSize -1) ? "" : " "); 
 		}
-		return resultText;
+		return encryptedText;
 	}
 }

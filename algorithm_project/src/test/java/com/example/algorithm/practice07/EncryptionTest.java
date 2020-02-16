@@ -19,11 +19,28 @@ public class EncryptionTest {
 	
 	@Test
 	public void test01() {
-		String inputStr = "chillout";
+		String inputText = "haveaniceday";
 		
-		encryption.calculateRoot(inputStr);
-		assertThat(
-				encryption.getResult(
-						encryption.divideStr(inputStr))).isEqualTo("a");
+		encryption.calculateRoot(inputText);
+		assertThat(encryption.encryptText(
+						encryption.makeMatrix(inputText))).isEqualTo("hae and via ecy");
+	}
+	
+	@Test
+	public void test02() {
+		String inputText = "a";
+		
+		encryption.calculateRoot(inputText);
+		assertThat(encryption.encryptText(
+						encryption.makeMatrix(inputText))).isEqualTo("a");
+	}
+	
+	@Test
+	public void test03() {
+		String inputText = "feedthedog";
+		
+		encryption.calculateRoot(inputText);
+		assertThat(encryption.encryptText(
+						encryption.makeMatrix(inputText))).isEqualTo("fto ehg ee dd");
 	}
 }
